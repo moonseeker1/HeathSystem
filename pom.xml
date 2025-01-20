@@ -34,7 +34,6 @@
         <spring-boot-admin.version>3.2.2</spring-boot-admin.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
-        <spring-framework.version>6.1.0</spring-framework.version>
         <hutool.version>5.8.16</hutool.version>
         <knife4j.version>4.5.0</knife4j.version>
         <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
@@ -57,15 +56,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- SpringFramework的依赖配置-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- SpringCloud 微服务 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
