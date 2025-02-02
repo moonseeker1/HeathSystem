@@ -4,8 +4,8 @@ package com.healthSystem.api;
 import com.healthSystem.api.domain.SysUser;
 import com.healthSystem.api.factory.RemoteUserFallbackFactory;
 import com.healthSystem.api.model.LoginUser;
-import com.healthSystem.core.constant.SecurityConstants;
-import com.healthSystem.core.dto.R;
+import com.healthSystem.common.core.constant.SecurityConstants;
+import com.healthSystem.common.core.dto.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

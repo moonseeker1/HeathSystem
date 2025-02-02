@@ -42,7 +42,6 @@
         <mybatis-generator.version>1.4.2</mybatis-generator.version>
         <mysql-connector.version>8.0.28</mysql-connector.version>
         <minio.version>8.4.5</minio.version>
-        <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <pagehelper.version>6.1.0</pagehelper.version>
         <fastjson.version>2.0.43</fastjson.version>
@@ -52,6 +51,7 @@
         <slf4j-api.version>2.0.9</slf4j-api.version>
         <logback-classic.version>1.4.14</logback-classic.version>
         <transmittable-thread-local.version>2.14.4</transmittable-thread-local.version>
+        <mysql-connector.version>8.0.29</mysql-connector.version>
     </properties>
 
     <dependencyManagement>
@@ -100,13 +100,6 @@
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-            <!-- Jwt -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
@@ -143,6 +136,11 @@
                 <version>${transmittable-thread-local.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector.version}</version>
+            </dependency>
 
         </dependencies>
 

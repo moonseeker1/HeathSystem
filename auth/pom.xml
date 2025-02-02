@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.scaffold</groupId>
+    <groupId>com.healthSystem</groupId>
     <artifactId>auth</artifactId>
 
     <properties>
@@ -49,7 +49,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.scaffold</groupId>
+            <groupId>com.healthSystem</groupId>
             <artifactId>security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

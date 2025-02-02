@@ -3,10 +3,10 @@ package com.healthSystem.auth.service;
 
 import com.healthSystem.api.RemoteLogService;
 import com.healthSystem.api.domain.SysLogininfor;
-import com.healthSystem.core.constant.Constants;
-import com.healthSystem.core.constant.SecurityConstants;
-import com.healthSystem.core.util.IpUtils;
-import com.healthSystem.core.util.StringUtils;
+import com.healthSystem.common.core.constant.Constants;
+import com.healthSystem.common.core.constant.SecurityConstants;
+import com.healthSystem.common.core.util.IpUtils;
+import com.healthSystem.common.core.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

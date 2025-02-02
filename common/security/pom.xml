@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.scaffold</groupId>
+        <groupId>com.healthSystem</groupId>
         <artifactId>common</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -18,7 +18,7 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.scaffold</groupId>
+            <groupId>com.healthSystem</groupId>
             <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -29,24 +29,30 @@
         </dependency>
 
         <dependency>
-            <groupId>org.scaffold</groupId>
+            <groupId>com.healthSystem</groupId>
             <artifactId>core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.scaffold</groupId>
+            <groupId>com.healthSystem</groupId>
             <artifactId>api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.scaffold</groupId>
+            <groupId>com.healthSystem</groupId>
             <artifactId>redis</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.healthSystem</groupId>
+            <artifactId>security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

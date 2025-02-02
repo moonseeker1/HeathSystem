@@ -4,7 +4,7 @@ package com.healthSystem.api.factory;
 import com.healthSystem.api.RemoteUserService;
 import com.healthSystem.api.domain.SysUser;
 import com.healthSystem.api.model.LoginUser;
-import com.healthSystem.core.dto.R;
+import com.healthSystem.common.core.dto.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;

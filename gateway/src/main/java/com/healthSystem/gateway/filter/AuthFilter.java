@@ -4,13 +4,13 @@ package com.healthSystem.gateway.filter;
 
 
 
-import com.healthSystem.core.constant.CacheConstants;
-import com.healthSystem.core.constant.SecurityConstants;
-import com.healthSystem.core.constant.TokenConstants;
-import com.healthSystem.core.util.JwtUtils;
-import com.healthSystem.core.util.ServletUtils;
-import com.healthSystem.core.util.StringUtils;
-import com.healthSystem.redis.service.RedisService;
+import com.healthSystem.common.core.constant.CacheConstants;
+import com.healthSystem.common.core.constant.SecurityConstants;
+import com.healthSystem.common.core.constant.TokenConstants;
+import com.healthSystem.common.core.util.JwtUtils;
+import com.healthSystem.common.core.util.ServletUtils;
+import com.healthSystem.common.core.util.StringUtils;
+import com.healthSystem.common.redis.service.RedisService;
 import io.jsonwebtoken.Claims;
 import com.healthSystem.gateway.config.IgnoreUrlsConfig;
 
@@ -69,11 +69,11 @@ public class AuthFilter implements GlobalFilter, Ordered
             return unauthorizedResponse(exchange, "令牌已过期或验证不正确！");
         }
         String userkey = JwtUtils.getUserKey(claims);
-        boolean islogin = redisService.hasKey(getTokenKey(userkey));
-        if (!islogin)
-        {
-            return unauthorizedResponse(exchange, "登录状态已过期");
-        }
+//        boolean islogin = redisService.hasKey(getTokenKey(userkey));
+//        if (!islogin)
+//        {
+//            return unauthorizedResponse(exchange, "登录状态已过期");
+//        }
         String userid = JwtUtils.getUserId(claims);
         String username = JwtUtils.getUserName(claims);
         if (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username))

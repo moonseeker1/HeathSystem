@@ -1,7 +1,7 @@
 package com.healthSystem.api.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.healthSystem.core.web.dto.BaseEntity;
+
+import com.healthSystem.common.core.web.dto.BaseEntity;
 
 
 import java.util.Date;
@@ -36,7 +36,7 @@ public class SysLogininfor extends BaseEntity
     private String msg;
 
     /** 访问时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+
 
     private Date accessTime;
 

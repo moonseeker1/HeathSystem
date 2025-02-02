@@ -2,7 +2,7 @@ package com.healthSystem.api;
 
 import com.healthSystem.api.domain.SysFile;
 import com.healthSystem.api.factory.RemoteFileFallbackFactory;
-import com.healthSystem.core.dto.R;
+import com.healthSystem.common.core.dto.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -2,7 +2,7 @@ package com.healthSystem.gateway.filter;
 
 
 
-import com.healthSystem.core.util.ServletUtils;
+import com.healthSystem.common.core.util.ServletUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;

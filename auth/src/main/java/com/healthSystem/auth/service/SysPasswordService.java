@@ -2,11 +2,11 @@ package com.healthSystem.auth.service;
 
 
 import com.healthSystem.api.domain.SysUser;
-import com.healthSystem.core.constant.CacheConstants;
-import com.healthSystem.core.constant.Constants;
-import com.healthSystem.core.exception.ServiceException;
-import com.healthSystem.redis.service.RedisService;
-import com.healthSystem.security.utils.SecurityUtils;
+import com.healthSystem.common.core.constant.CacheConstants;
+import com.healthSystem.common.core.constant.Constants;
+import com.healthSystem.common.core.exception.ServiceException;
+import com.healthSystem.common.redis.service.RedisService;
+import com.healthSystem.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -4,7 +4,7 @@ package com.healthSystem.api.factory;
 import com.healthSystem.api.RemoteLogService;
 import com.healthSystem.api.domain.SysLogininfor;
 import com.healthSystem.api.domain.SysOperLog;
-import com.healthSystem.core.dto.R;
+import com.healthSystem.common.core.dto.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;

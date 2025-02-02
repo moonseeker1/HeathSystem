@@ -3,8 +3,8 @@ package com.healthSystem.api.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.healthSystem.core.constant.UserConstants;
-import com.healthSystem.core.web.dto.BaseEntity;
+import com.healthSystem.common.core.constant.UserConstants;
+import com.healthSystem.common.core.web.dto.BaseEntity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

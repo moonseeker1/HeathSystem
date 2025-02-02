@@ -5,12 +5,12 @@ import com.healthSystem.api.model.LoginUser;
 import com.healthSystem.auth.form.LoginBody;
 import com.healthSystem.auth.form.RegisterBody;
 import com.healthSystem.auth.service.SysLoginService;
-import com.healthSystem.core.dto.R;
-import com.healthSystem.core.util.JwtUtils;
-import com.healthSystem.core.util.StringUtils;
-import com.healthSystem.security.auth.AuthUtil;
-import com.healthSystem.security.service.TokenService;
-import com.healthSystem.security.utils.SecurityUtils;
+import com.healthSystem.common.core.dto.R;
+import com.healthSystem.common.core.util.JwtUtils;
+import com.healthSystem.common.core.util.StringUtils;
+import com.healthSystem.common.security.auth.AuthUtil;
+import com.healthSystem.common.security.service.TokenService;
+import com.healthSystem.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;

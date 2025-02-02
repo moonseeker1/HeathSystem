@@ -8,8 +8,8 @@
         <artifactId>Scaffold</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-
-    <groupId>org.scaffold</groupId>
+    <packaging>pom</packaging>
+    <groupId>com.healthSystem</groupId>
     <artifactId>modules</artifactId>
 
     <properties>
