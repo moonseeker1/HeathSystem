@@ -9,6 +9,7 @@ import com.healthSystem.common.core.util.StringUtils;
 
 import com.healthSystem.common.redis.service.RedisService;
 import com.healthSystem.common.security.utils.SecurityUtils;
+import com.healthSystem.user.domain.dto.SystemUserInfo;
 import com.healthSystem.user.domain.entity.SystemUser;
 import com.healthSystem.user.mapper.UserMapper;
 import com.healthSystem.user.service.UserService;
@@ -51,6 +52,7 @@ public class UserServiceImpl implements UserService {
     public void register(SystemUser user) {
         String id = String.valueOf(IdUtil.getSnowflake().nextId());
         user.setUserId(id);
+        user.setStatus('0');
         userMapper.insert(user);
     }
 
@@ -68,6 +70,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public SystemUser getById(String userId) {
         return userMapper.selectById(userId);
+    }
+
+    @Override
+    public SystemUserInfo getInfo() {
+        SystemUser systemUser = userMapper.selectById(SecurityUtils.getUserId());
+        SystemUserInfo systemUserInfo = new SystemUserInfo();
+        systemUserInfo.setUserName(systemUser.getUserName());
+        systemUserInfo.setUserId(systemUser.getUserId());
+        systemUserInfo.setStatus(systemUser.getStatus());
+        return systemUserInfo;
     }
 
 

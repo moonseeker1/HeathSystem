@@ -3,7 +3,9 @@ package com.healthSystem.api.factory;
 
 import com.healthSystem.api.RemoteUserService;
 import com.healthSystem.api.domain.SysUser;
+import com.healthSystem.api.domain.SystemUser;
 import com.healthSystem.api.model.LoginUser;
+import com.healthSystem.common.core.api.CommonResult;
 import com.healthSystem.common.core.dto.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,11 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
         log.error("用户服务调用失败:{}", throwable.getMessage());
         return new RemoteUserService()
         {
+            @Override
+            public CommonResult update(SystemUser sysUser, String source) {
+                return null;
+            }
+
             @Override
             public R<LoginUser> getUserInfo(String username, String source)
             {

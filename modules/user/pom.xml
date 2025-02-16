@@ -82,6 +82,20 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Druid 数据源依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <!-- 请根据实际情况替换为最新版本号 -->
+            <version>1.2.18</version>
+        </dependency>
+        <!-- 如果是 Spring Boot 项目，还需要添加 Spring Boot 集成 Druid 的依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <!-- 请根据实际情况替换为最新版本号 -->
+            <version>1.2.18</version>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>

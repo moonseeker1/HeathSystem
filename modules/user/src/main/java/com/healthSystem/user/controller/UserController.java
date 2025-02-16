@@ -3,8 +3,10 @@ package com.healthSystem.user.controller;
 
 import com.healthSystem.common.core.api.CommonResult;
 
+import com.healthSystem.user.domain.dto.SystemUserInfo;
 import com.healthSystem.user.domain.entity.SystemUser;
 import com.healthSystem.user.service.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,10 @@ public class UserController {
     @GetMapping("/{userId}")
     public CommonResult getById(@PathVariable("userId") String userId){
         return CommonResult.success(userService.getById(userId));
+    }
+    @GetMapping("/getInfo")
+    public CommonResult<SystemUserInfo> getInfo(){
+        return CommonResult.success(userService.getInfo());
     }
 
 }

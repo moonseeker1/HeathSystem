@@ -1,5 +1,6 @@
 package com.healthSystem.user.service;
 
+import com.healthSystem.user.domain.dto.SystemUserInfo;
 import com.healthSystem.user.domain.entity.SystemUser;
 
 
@@ -13,4 +14,6 @@ public interface UserService {
     public void delete(String userId);
 
     public SystemUser getById(String userId);
+
+    public SystemUserInfo getInfo();
 }
