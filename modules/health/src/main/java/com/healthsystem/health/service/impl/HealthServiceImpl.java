@@ -15,6 +15,8 @@ import com.healthsystem.health.service.HealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HealthServiceImpl implements HealthService {
     @Autowired
@@ -25,21 +27,19 @@ public class HealthServiceImpl implements HealthService {
     public void create(Health health) {
 
         health.setHealthId(String.valueOf(IdUtil.getSnowflake().nextId()));
-        health.setUserId(String.valueOf(SecurityUtils.getUserId()));
-        String userId = String.valueOf(SecurityUtils.getUserId());
-
-        char status = '1';
+        health.setUserId(String.valueOf((SecurityUtils.getLoginUser().getUserid())));
+        String userId = String.valueOf((SecurityUtils.getLoginUser().getUserid()));
+        int status = 1;
         SystemUser systemUser = new SystemUser();
         systemUser.setUserId(userId);
         systemUser.setStatus(status);
-
         remoteUserService.update(systemUser, SecurityConstants.INNER);
         healthMapper.insert(health);
     }
 
     @Override
     public void update(Health health) {
-        health.setUserId(String.valueOf(SecurityUtils.getUserId()));
+        health.setUserId(String.valueOf((SecurityUtils.getLoginUser().getUserid())));
         LambdaQueryWrapper<Health> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(StringUtils.isNotEmpty(health.getUserId()),Health::getUserId, health.getUserId());
         healthMapper.update(health, lambdaQueryWrapper);
@@ -55,5 +55,13 @@ public class HealthServiceImpl implements HealthService {
             throw new ApiException("未建立健康档案");
         }
         return health;
+    }
+
+    @Override
+    public List<Health> listHealth(List<String> userIds) {
+        LambdaQueryWrapper<Health> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(StringUtils.isNotEmpty(userIds),Health::getUserId, userIds);
+        List<Health> healthList = healthMapper.selectList(lambdaQueryWrapper);
+        return healthList;
     }
 }

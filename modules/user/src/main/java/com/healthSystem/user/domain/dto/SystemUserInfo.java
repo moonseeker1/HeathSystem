@@ -7,5 +7,7 @@ public class SystemUserInfo
 {
     String userName;
     String userId;
-    char status;
+    Integer status;
+    Integer dietStatus;
+    Integer sportStatus;
 }

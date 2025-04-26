@@ -17,9 +17,6 @@
         <module>modules</module>
         <module>api</module>
         <module>gateway</module>
-        <module>auth</module>
-        <module>common</module>
-        <module>modules</module>
     </modules>
 
     <properties>

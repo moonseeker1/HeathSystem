@@ -3,12 +3,16 @@ package com.healthSystem.api;
 
 import com.healthSystem.api.domain.SysUser;
 import com.healthSystem.api.domain.SystemUser;
+import com.healthSystem.api.domain.SystemUserPage;
 import com.healthSystem.api.model.LoginUser;
+import com.healthSystem.common.core.api.CommonPage;
 import com.healthSystem.common.core.api.CommonResult;
 import com.healthSystem.common.core.constant.SecurityConstants;
 import com.healthSystem.common.core.dto.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户服务
@@ -50,5 +54,7 @@ public interface RemoteUserService
      */
     @PutMapping("/user/recordlogin")
     public R<Boolean> recordUserLogin(@RequestBody SysUser sysUser, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    @PostMapping("/user")
+    public CommonPage<SystemUser> list(SystemUserPage systemUserPage,@RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
 }

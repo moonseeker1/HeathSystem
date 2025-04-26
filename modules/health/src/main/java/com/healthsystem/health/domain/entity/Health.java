@@ -11,7 +11,7 @@ public class Health {
     String healthId;
     String userId;
     Integer age;
-    char sex;
+    Integer sex;
     Double height;
     Double weight;
     String bloodPressure;

@@ -114,13 +114,18 @@ public class TokenService
      */
     public LoginUser getLoginUser(String token)
     {
-        LoginUser user = null;
+        LoginUser user = new LoginUser();
         try
         {
             if (StringUtils.isNotEmpty(token))
             {
                 String userkey = JwtUtils.getUserKey(token);
-                user = redisService.getCacheObject(getTokenKey(userkey));
+//                user = redisService.getCacheObject(getTokenKey(userkey));
+                String userId = JwtUtils.getUserId(token);
+                String userName = JwtUtils.getUserName(token);
+                user.setToken(token);
+                user.setUserid(Long.parseLong(userId));
+                user.setUsername(userName);
                 return user;
             }
         }

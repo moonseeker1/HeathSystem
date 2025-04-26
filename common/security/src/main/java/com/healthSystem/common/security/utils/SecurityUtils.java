@@ -22,6 +22,7 @@ public class SecurityUtils
      */
     public static Long getUserId()
     {
+        Long userId = SecurityContextHolder.getUserId();
         return SecurityContextHolder.getUserId();
     }
 
@@ -46,6 +47,7 @@ public class SecurityUtils
      */
     public static LoginUser getLoginUser()
     {
+        LoginUser loginUser = SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
         return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
     }
 

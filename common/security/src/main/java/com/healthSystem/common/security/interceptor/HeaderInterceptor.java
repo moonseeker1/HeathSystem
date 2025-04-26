@@ -37,11 +37,12 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor
         if (StringUtils.isNotEmpty(token))
         {
             LoginUser loginUser = AuthUtil.getLoginUser(token);
-            if (StringUtils.isNotNull(loginUser))
-            {
-                AuthUtil.verifyLoginUserExpire(loginUser);
+//            if (StringUtils.isNotNull(loginUser))
+//            {
+//                AuthUtil.verifyLoginUserExpire(loginUser);
+
                 SecurityContextHolder.set(SecurityConstants.LOGIN_USER, loginUser);
-            }
+//            }
         }
         return true;
     }

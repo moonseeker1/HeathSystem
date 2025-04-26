@@ -2,6 +2,13 @@ package com.healthSystem.user.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.healthSystem.api.RemoteDietService;
+import com.healthSystem.api.RemoteHealthService;
+import com.healthSystem.api.RemoteSportService;
+import com.healthSystem.api.domain.Diet;
+import com.healthSystem.api.domain.Health;
+import com.healthSystem.api.domain.Sport;
+import com.healthSystem.common.core.constant.SecurityConstants;
 import com.healthSystem.common.core.exception.ServiceException;
 
 import com.healthSystem.common.core.util.JwtUtils;
@@ -10,13 +17,17 @@ import com.healthSystem.common.core.util.StringUtils;
 import com.healthSystem.common.redis.service.RedisService;
 import com.healthSystem.common.security.utils.SecurityUtils;
 import com.healthSystem.user.domain.dto.SystemUserInfo;
+import com.healthSystem.user.domain.dto.SystemUserPage;
 import com.healthSystem.user.domain.entity.SystemUser;
+import com.healthSystem.user.domain.vo.SystemUserDiet;
+import com.healthSystem.user.domain.vo.SystemUserHealth;
+import com.healthSystem.user.domain.vo.SystemUserSport;
 import com.healthSystem.user.mapper.UserMapper;
 import com.healthSystem.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +37,12 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private RemoteHealthService remoteHealthService;
+    @Autowired
+    private RemoteDietService remoteDietService;
+    @Autowired
+    private RemoteSportService remoteSportService;
     @Override
     public String login(SystemUser user) {
         if (StringUtils.isAnyBlank(user.getUserName(), user.getPassword()))
@@ -52,13 +69,13 @@ public class UserServiceImpl implements UserService {
     public void register(SystemUser user) {
         String id = String.valueOf(IdUtil.getSnowflake().nextId());
         user.setUserId(id);
-        user.setStatus('0');
+        user.setStatus(0);
         userMapper.insert(user);
     }
 
     @Override
     public void update(SystemUser user) {
-        user.setUserId(String.valueOf(SecurityUtils.getUserId()));
+        user.setUserId(String.valueOf(SecurityUtils.getLoginUser().getUserid()));
         userMapper.updateById(user);
     }
 
@@ -74,12 +91,134 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SystemUserInfo getInfo() {
-        SystemUser systemUser = userMapper.selectById(SecurityUtils.getUserId());
+        SystemUser systemUser = userMapper.selectById((SecurityUtils.getLoginUser().getUserid()));
         SystemUserInfo systemUserInfo = new SystemUserInfo();
         systemUserInfo.setUserName(systemUser.getUserName());
         systemUserInfo.setUserId(systemUser.getUserId());
         systemUserInfo.setStatus(systemUser.getStatus());
+        systemUserInfo.setDietStatus(systemUser.getDietStatus());
+        systemUserInfo.setSportStatus(systemUser.getSportStatus());
         return systemUserInfo;
+    }
+
+
+
+    @Override
+    public List<SystemUser> listAll() {
+        LambdaQueryWrapper<SystemUser> queryWrapper = new LambdaQueryWrapper<>();
+        return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<SystemUser> list(SystemUserPage systemUserPage) {
+        LambdaQueryWrapper<SystemUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(systemUserPage.getUserName()),SystemUser::getUserName,systemUserPage.getUserName());
+        return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<SystemUserHealth> listHealth(SystemUserPage systemUserPage) {
+        LambdaQueryWrapper<SystemUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(systemUserPage.getUserName()),SystemUser::getUserName,systemUserPage.getUserName());
+        List<SystemUser> list = userMapper.selectList(queryWrapper);
+        List<String> userIds = list.stream().map(SystemUser::getUserId).toList();
+        List<Health> list1 = remoteHealthService.listHealth(userIds, SecurityConstants.INNER).getData();
+        HashMap<String,Health> hashMap = new HashMap<>();
+        for (Health health : list1) {
+            hashMap.put(health.getUserId(),health);
+        }
+        List<SystemUserHealth> systemUserHealthList = new ArrayList<>();
+        for (SystemUser systemUser : list) {
+            SystemUserHealth systemUserHealth = new SystemUserHealth();
+            systemUserHealth.setUserId(systemUser.getUserId());
+            systemUserHealth.setUserName(systemUser.getUserName());
+            Health health = hashMap.get(systemUser.getUserId());
+            if(health != null){
+                systemUserHealth.setAge(health.getAge());
+                systemUserHealth.setSex(health.getSex());
+                systemUserHealth.setHeight(health.getHeight());
+                systemUserHealth.setWeight(health.getWeight());
+                systemUserHealth.setBloodPressure(health.getBloodPressure());
+                systemUserHealth.setBloodSugar(health.getBloodSugar());
+            }
+            else{
+                systemUserHealth.setAge(null);
+                systemUserHealth.setSex(null);
+                systemUserHealth.setHeight(null);
+                systemUserHealth.setWeight(null);
+                systemUserHealth.setBloodPressure(null);
+                systemUserHealth.setBloodSugar(null);
+            }
+            systemUserHealthList.add(systemUserHealth);
+        }
+
+        return systemUserHealthList;
+    }
+
+    @Override
+    public List<SystemUserDiet> listDiet(SystemUserPage systemUserPage) {
+        LambdaQueryWrapper<SystemUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(systemUserPage.getUserName()),SystemUser::getUserName,systemUserPage.getUserName());
+        List<SystemUser> list = userMapper.selectList(queryWrapper);
+        List<String> userIds = list.stream().map(SystemUser::getUserId).toList();
+        List<Diet> list1 = remoteDietService.listDiet(userIds, SecurityConstants.INNER).getData();
+        HashMap<String,Diet> hashMap = new HashMap<>();
+        for (Diet diet : list1) {
+            hashMap.put(diet.getUserId(),diet);
+        }
+        List<SystemUserDiet> systemUserDietList = new ArrayList<>();
+        for (SystemUser systemUser : list) {
+            SystemUserDiet systemUserDiet = new SystemUserDiet();
+            systemUserDiet.setUserId(systemUser.getUserId());
+            systemUserDiet.setUserName(systemUser.getUserName());
+            Diet diet = hashMap.get(systemUser.getUserId());
+            if(diet != null){
+                systemUserDiet.setBreakfast(diet.getBreakfast());
+                systemUserDiet.setLunch(diet.getLunch());
+                systemUserDiet.setDinner(diet.getDinner());
+            }
+            else{
+                systemUserDiet.setBreakfast(null);
+                systemUserDiet.setLunch(null);
+                systemUserDiet.setDinner(null);
+            }
+            systemUserDietList.add(systemUserDiet);
+        }
+
+        return systemUserDietList;
+    }
+
+    @Override
+    public List<SystemUserSport> listSport(SystemUserPage systemUserPage) {
+        LambdaQueryWrapper<SystemUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(systemUserPage.getUserName()),SystemUser::getUserName,systemUserPage.getUserName());
+        List<SystemUser> list = userMapper.selectList(queryWrapper);
+        List<String> userIds = list.stream().map(SystemUser::getUserId).toList();
+        List<Sport> list1 = remoteSportService.listSport(userIds, SecurityConstants.INNER).getData();
+        HashMap<String,Sport> hashMap = new HashMap<>();
+        for (Sport sport : list1) {
+            hashMap.put(sport.getUserId(),sport);
+        }
+        List<SystemUserSport> systemUserSportList = new ArrayList<>();
+        for (SystemUser systemUser : list) {
+            SystemUserSport systemUserSport = new SystemUserSport();
+            systemUserSport.setUserId(systemUser.getUserId());
+            systemUserSport.setUserName(systemUser.getUserName());
+            Sport sport = hashMap.get(systemUser.getUserId());
+            if(sport != null){
+                systemUserSport.setType(sport.getType());
+                systemUserSport.setRate(sport.getRate());
+                systemUserSport.setTime(sport.getTime());
+            }
+            else{
+                systemUserSport.setType(null);
+                systemUserSport.setRate(null);
+                systemUserSport.setTime(null);
+            }
+            systemUserSportList.add(systemUserSport);
+        }
+
+        return systemUserSportList;
     }
 
 

@@ -14,5 +14,7 @@ public class SystemUser extends BaseEntity {
     private String password;
     private String phonenumber;
     private String email;
-    private char status;
+    private Integer status;
+    private Integer dietStatus;
+    private Integer sportStatus;
 }
