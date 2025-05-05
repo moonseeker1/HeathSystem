@@ -1,6 +1,5 @@
-package com.healthsystem.bigmoduleapi.webSocket;
+package com.healthsystem.bigmoduleApi.webSocket;
 
-import com.healthsystem.bigmoduleapi.webSocket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
 

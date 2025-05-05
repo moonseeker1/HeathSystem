@@ -1,6 +1,6 @@
-package com.healthsystem.bigmoduleapi.quartzConfig;
+package com.healthsystem.bigmoduleApi.quartzConfig;
 
-import com.healthsystem.bigmoduleapi.job.HealthTipsJob;
+import com.healthsystem.bigmoduleApi.job.HealthTipsJob;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

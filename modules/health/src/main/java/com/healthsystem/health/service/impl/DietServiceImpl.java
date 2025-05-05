@@ -5,6 +5,7 @@ import com.healthSystem.api.RemoteUserService;
 import com.healthSystem.api.domain.SystemUser;
 import com.healthSystem.common.core.constant.SecurityConstants;
 import com.healthSystem.common.core.util.StringUtils;
+import com.healthSystem.common.security.utils.SecurityUtils;
 import com.healthsystem.health.domain.entity.Diet;
 import com.healthsystem.health.domain.entity.Health;
 import com.healthsystem.health.mapper.DietMapper;
@@ -50,5 +51,15 @@ public class DietServiceImpl implements DietService {
         lambdaQueryWrapper.in(StringUtils.isNotEmpty(userIds),Diet::getUserId, userIds);
         List<Diet> diets = dietMapper.selectList(lambdaQueryWrapper);
         return diets;
+    }
+
+    @Override
+    public void delete(String dietId) {
+        SystemUser systemUser = new SystemUser();
+        Diet diet = dietMapper.selectById(dietId);
+        systemUser.setUserId(diet.getUserId());
+        systemUser.setDietStatus(0);
+        remoteUserService.update(systemUser, SecurityConstants.INNER);
+        dietMapper.deleteById(dietId);
     }
 }

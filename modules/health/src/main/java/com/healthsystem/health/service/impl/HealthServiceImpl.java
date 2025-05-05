@@ -64,4 +64,14 @@ public class HealthServiceImpl implements HealthService {
         List<Health> healthList = healthMapper.selectList(lambdaQueryWrapper);
         return healthList;
     }
+
+    @Override
+    public void delete(String healthId) {
+        SystemUser systemUser = new SystemUser();
+        Health health = healthMapper.selectById(healthId);
+        systemUser.setUserId(health.getUserId());
+        systemUser.setStatus(0);
+        remoteUserService.update(systemUser, SecurityConstants.INNER);
+        healthMapper.deleteById(healthId);
+    }
 }

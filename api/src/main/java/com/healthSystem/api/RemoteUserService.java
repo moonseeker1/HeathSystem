@@ -56,5 +56,7 @@ public interface RemoteUserService
     public R<Boolean> recordUserLogin(@RequestBody SysUser sysUser, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
     @PostMapping("/user")
     public CommonPage<SystemUser> list(SystemUserPage systemUserPage,@RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    @GetMapping("/user/{userId}")
+    public CommonResult<SystemUser> getById(@PathVariable("userId") String userId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
 }

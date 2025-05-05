@@ -1,4 +1,4 @@
-package com.healthsystem.bigmoduleapi.webSocket;
+package com.healthsystem.bigmoduleApi.webSocket;
 
 
 import org.springframework.context.annotation.Bean;

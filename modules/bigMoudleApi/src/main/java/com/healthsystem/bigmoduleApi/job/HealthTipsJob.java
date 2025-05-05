@@ -1,20 +1,16 @@
-package com.healthsystem.bigmoduleapi.job;
+package com.healthsystem.bigmoduleApi.job;
 
 import com.healthSystem.common.redis.service.RedisService;
-import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionChunk;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionRequest;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessageRole;
 import com.volcengine.ark.runtime.service.ArkService;
-import io.reactivex.Flowable;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;

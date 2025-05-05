@@ -44,7 +44,7 @@ public class UserController {
         return CommonResult.success();
     }
     @GetMapping("/{userId}")
-    public CommonResult getById(@PathVariable("userId") String userId){
+    public CommonResult<SystemUser> getById(@PathVariable("userId") String userId){
         return CommonResult.success(userService.getById(userId));
     }
     @GetMapping("/getInfo")

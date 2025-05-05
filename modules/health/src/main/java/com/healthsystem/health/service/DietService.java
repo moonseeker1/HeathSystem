@@ -13,4 +13,6 @@ public interface DietService {
     Diet get(String userId);
 
     List<Diet> listDiet(List<String> userIds);
+
+    void delete(String dietId);
 }

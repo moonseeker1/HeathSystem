@@ -59,5 +59,15 @@ public class SportServiceImpl implements SportService {
         remoteUserService.update(systemUser, SecurityConstants.INNER);
         sportMapper.insert(sport);
     }
+
+    @Override
+    public void delete(String sportId) {
+        SystemUser systemUser = new SystemUser();
+        Sport sport = sportMapper.selectById(sportId);
+        systemUser.setUserId(sport.getUserId());
+        systemUser.setSportStatus(0);
+        remoteUserService.update(systemUser, SecurityConstants.INNER);
+        sportMapper.deleteById(sportId);
+    }
     // Implement the methods defined in the SportService interface
 }

@@ -33,4 +33,9 @@ public class SportController {
     public CommonResult<List<Sport>> listSport(@RequestBody List<String> userIds) {
         return CommonResult.success(sportService.listSport(userIds));
     }
+    @DeleteMapping("/delete/{sportId}")
+    public CommonResult delete(@PathVariable("sportId") String sportId) {
+        sportService.delete(sportId);
+        return CommonResult.success();
+    }
 }

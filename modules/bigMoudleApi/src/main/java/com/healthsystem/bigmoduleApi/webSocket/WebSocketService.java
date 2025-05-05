@@ -1,4 +1,4 @@
-package com.healthsystem.bigmoduleapi.webSocket;
+package com.healthsystem.bigmoduleApi.webSocket;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;

@@ -1,4 +1,4 @@
-package com.healthsystem.bigmoduleapi.domain.dto;
+package com.healthsystem.bigmoduleApi.domain.dto;
 
 import lombok.Data;
 

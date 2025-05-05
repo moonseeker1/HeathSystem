@@ -128,7 +128,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.healthSystem.user.UserApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

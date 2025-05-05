@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SystemUserHealth {
-
+    String healthId;
     String userId;
     String userName;
     Integer age;

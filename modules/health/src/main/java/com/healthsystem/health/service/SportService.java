@@ -13,4 +13,6 @@ public interface SportService {
     List<Sport> listSport(List<String> userIds);
 
     void save(Sport sport);
+
+    void delete(String sportId);
 }

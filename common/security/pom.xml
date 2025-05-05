@@ -17,11 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.healthSystem</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!-- Spring Web -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -43,13 +38,6 @@
         <dependency>
             <groupId>com.healthSystem</groupId>
             <artifactId>redis</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.healthSystem</groupId>
-            <artifactId>security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

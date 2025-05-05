@@ -35,5 +35,10 @@ public class HealthController {
     public CommonResult<List<Health>> listHealth(@RequestBody List<String> userIds) {
         return CommonResult.success(healthService.listHealth(userIds));
     }
+    @DeleteMapping("/delete/{healthId}")
+    public CommonResult delete(@PathVariable("healthId") String healthId) {
+        healthService.delete(healthId);
+        return CommonResult.success();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.healthSystem.user.service.impl;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.healthSystem.api.RemoteDietService;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,6 +70,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void register(SystemUser user) {
         String id = String.valueOf(IdUtil.getSnowflake().nextId());
+        user.setCreateTime(Date.from(DateTime.now().toInstant()));
+        user.setUpdateTime(Date.from(DateTime.now().toInstant()));
         user.setUserId(id);
         user.setStatus(0);
         userMapper.insert(user);
@@ -75,12 +79,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(SystemUser user) {
-        user.setUserId(String.valueOf(SecurityUtils.getLoginUser().getUserid()));
+        if(user.getUserId()==null){
+            user.setUserId(String.valueOf(SecurityUtils.getLoginUser().getUserid()));
+        }
+
+        user.setUpdateTime(Date.from(DateTime.now().toInstant()));
         userMapper.updateById(user);
     }
 
     @Override
     public void delete(String userId) {
+        SystemUser systemUser = userMapper.selectById(userId);
+        if(systemUser.getStatus()==0||systemUser.getDietStatus()==0||systemUser.getSportStatus()==0){
+            throw new ServiceException("用户还存在相关数据，无法删除");
+        }
         userMapper.deleteById(userId);
     }
 
@@ -134,22 +146,16 @@ public class UserServiceImpl implements UserService {
             systemUserHealth.setUserName(systemUser.getUserName());
             Health health = hashMap.get(systemUser.getUserId());
             if(health != null){
+                systemUserHealth.setHealthId(health.getHealthId());
                 systemUserHealth.setAge(health.getAge());
                 systemUserHealth.setSex(health.getSex());
                 systemUserHealth.setHeight(health.getHeight());
                 systemUserHealth.setWeight(health.getWeight());
                 systemUserHealth.setBloodPressure(health.getBloodPressure());
                 systemUserHealth.setBloodSugar(health.getBloodSugar());
+                systemUserHealthList.add(systemUserHealth);
             }
-            else{
-                systemUserHealth.setAge(null);
-                systemUserHealth.setSex(null);
-                systemUserHealth.setHeight(null);
-                systemUserHealth.setWeight(null);
-                systemUserHealth.setBloodPressure(null);
-                systemUserHealth.setBloodSugar(null);
-            }
-            systemUserHealthList.add(systemUserHealth);
+
         }
 
         return systemUserHealthList;
@@ -173,16 +179,14 @@ public class UserServiceImpl implements UserService {
             systemUserDiet.setUserName(systemUser.getUserName());
             Diet diet = hashMap.get(systemUser.getUserId());
             if(diet != null){
+                systemUserDiet.setDietId(diet.getDietId());
                 systemUserDiet.setBreakfast(diet.getBreakfast());
                 systemUserDiet.setLunch(diet.getLunch());
                 systemUserDiet.setDinner(diet.getDinner());
+                systemUserDietList.add(systemUserDiet);
+
             }
-            else{
-                systemUserDiet.setBreakfast(null);
-                systemUserDiet.setLunch(null);
-                systemUserDiet.setDinner(null);
-            }
-            systemUserDietList.add(systemUserDiet);
+
         }
 
         return systemUserDietList;
@@ -206,16 +210,12 @@ public class UserServiceImpl implements UserService {
             systemUserSport.setUserName(systemUser.getUserName());
             Sport sport = hashMap.get(systemUser.getUserId());
             if(sport != null){
+                systemUserSport.setSportId(sport.getSportId());
                 systemUserSport.setType(sport.getType());
                 systemUserSport.setRate(sport.getRate());
                 systemUserSport.setTime(sport.getTime());
+                systemUserSportList.add(systemUserSport);
             }
-            else{
-                systemUserSport.setType(null);
-                systemUserSport.setRate(null);
-                systemUserSport.setTime(null);
-            }
-            systemUserSportList.add(systemUserSport);
         }
 
         return systemUserSportList;

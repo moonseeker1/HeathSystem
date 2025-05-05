@@ -1,4 +1,4 @@
-package com.healthsystem.bigmoduleapi.service.impl;
+package com.healthsystem.bigmoduleApi.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.healthSystem.api.RemoteDietService;
@@ -10,10 +10,14 @@ import com.healthSystem.api.domain.Sport;
 import com.healthSystem.common.core.constant.SecurityConstants;
 import com.healthSystem.common.redis.service.RedisService;
 import com.healthSystem.common.security.utils.SecurityUtils;
-import com.healthsystem.bigmoduleapi.domain.dto.Message;
-import com.healthsystem.bigmoduleapi.domain.entity.RequestText;
-import com.healthsystem.bigmoduleapi.service.BigModuleService;
-import com.healthsystem.bigmoduleapi.webSocket.WebSocketService;
+import com.healthsystem.bigmoduleApi.annotation.BigModuleLog;
+import com.healthsystem.bigmoduleApi.annotation.UserBigModule;
+import com.healthsystem.bigmoduleApi.domain.dto.BigModuleResult;
+import com.healthsystem.bigmoduleApi.domain.dto.Message;
+import com.healthsystem.bigmoduleApi.domain.entity.RequestText;
+import com.healthsystem.bigmoduleApi.mapper.BigModuleLogMapper;
+import com.healthsystem.bigmoduleApi.service.BigModuleService;
+import com.healthsystem.bigmoduleApi.webSocket.WebSocketService;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionRequest;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessageRole;
@@ -43,11 +47,17 @@ public class BigModuleServiceImpl implements BigModuleService {
     static ConnectionPool connectionPool = new ConnectionPool(5, 1, TimeUnit.SECONDS);
     static Dispatcher dispatcher = new Dispatcher();
     static ArkService service = ArkService.builder().dispatcher(dispatcher).connectionPool(connectionPool).baseUrl("https://ark.cn-beijing.volces.com/api/v3").apiKey(apiKey).build();
+    @Autowired
+    BigModuleLogMapper bigModuleLogMapper;
 
     @Override
-    public void analysis() throws IOException {
+    @BigModuleLog("健康分析")
+    @UserBigModule
+    public BigModuleResult analysis() throws IOException {
+        BigModuleResult bigModuleResult = new BigModuleResult();
         final List<ChatMessage> streamMessages = new ArrayList<>();
         final ChatMessage streamSystemMessage = ChatMessage.builder().role(ChatMessageRole.SYSTEM).content("你是健康分析师，根据我的健康数据进行分析").build();
+        ChatCompletionRequest.ChatCompletionRequestStreamOptions  chatCompletionRequestStreamOptions= new ChatCompletionRequest.ChatCompletionRequestStreamOptions(true);
         Health health = healthService.get(String.valueOf(SecurityUtils.getUserId()), SecurityConstants.INNER).getData();
         StringBuilder text = new StringBuilder();
         if(health.getSex()=='1'){
@@ -67,6 +77,7 @@ public class BigModuleServiceImpl implements BigModuleService {
         ChatCompletionRequest streamChatCompletionRequest = ChatCompletionRequest.builder()
                 .model("ep-20250204104402-xlcg2")
                 .messages(streamMessages)
+                .streamOptions(chatCompletionRequestStreamOptions)
                 .build();
 
         service.streamChatCompletion(streamChatCompletionRequest)
@@ -82,6 +93,14 @@ public class BigModuleServiceImpl implements BigModuleService {
                                 // 发送消息到 WebSocket
                                 webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
                             }
+                            if (choice.getUsage() != null) {
+                                long promptTokens = choice.getUsage().getPromptTokens();
+                                long completionTokens = choice.getUsage().getCompletionTokens();
+                                long totalTokens = choice.getUsage().getTotalTokens();
+                                bigModuleResult.setPromptTokens(promptTokens);
+                                bigModuleResult.setCompletionTokens(completionTokens);
+                                bigModuleResult.setTotalTokens(totalTokens);
+                            }
                         }
                 );
         Message message = new Message();
@@ -89,11 +108,15 @@ public class BigModuleServiceImpl implements BigModuleService {
         message.setContent("$$$");
         String messageJson = JSON.toJSONString(message);
         webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
-
+        bigModuleResult.setUserId(SecurityUtils.getLoginUser().getUserid().toString());
+        return bigModuleResult;
     }
 
     @Override
-    public void chat(RequestText text) throws IOException {
+    @BigModuleLog("健康咨询")
+    @UserBigModule
+    public BigModuleResult chat(RequestText text) throws IOException {
+        BigModuleResult bigModuleResult = new BigModuleResult();
         final List<ChatMessage> streamMessages = new ArrayList<>();
         final ChatMessage streamSystemMessage = ChatMessage.builder().role(ChatMessageRole.SYSTEM).content("你是健康分析师，根据我的健康数据进行分析").build();
         final ChatMessage streamUserMessage = ChatMessage.builder().role(ChatMessageRole.USER).content(text.getText()).build();
@@ -122,7 +145,9 @@ public class BigModuleServiceImpl implements BigModuleService {
                                 long promptTokens = choice.getUsage().getPromptTokens();
                                 long completionTokens = choice.getUsage().getCompletionTokens();
                                 long totalTokens = choice.getUsage().getTotalTokens();
-
+                                bigModuleResult.setPromptTokens(promptTokens);
+                                bigModuleResult.setCompletionTokens(completionTokens);
+                                bigModuleResult.setTotalTokens(totalTokens);
                             }
 
                         }
@@ -132,6 +157,9 @@ public class BigModuleServiceImpl implements BigModuleService {
         message.setType("chat");
         String messageJson = JSON.toJSONString(message);
         webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
+        bigModuleResult.setUserId(SecurityUtils.getLoginUser().getUserid().toString());
+        return bigModuleResult;
+
     }
 
     @Override
@@ -141,7 +169,11 @@ public class BigModuleServiceImpl implements BigModuleService {
     }
 
     @Override
-    public void diet() throws IOException {
+    @BigModuleLog("饮食分析")
+    @UserBigModule
+    public BigModuleResult diet() throws IOException {
+        BigModuleResult bigModuleResult = new BigModuleResult();
+        ChatCompletionRequest.ChatCompletionRequestStreamOptions  chatCompletionRequestStreamOptions= new ChatCompletionRequest.ChatCompletionRequestStreamOptions(true);
         final List<ChatMessage> streamMessages = new ArrayList<>();
         final ChatMessage streamSystemMessage = ChatMessage.builder().role(ChatMessageRole.SYSTEM).content("你是健康分析师，根据我的健康数据和饮食情况进行饮食建议").build();
         Health health = healthService.get(String.valueOf(SecurityUtils.getUserId()), SecurityConstants.INNER).getData();
@@ -166,6 +198,7 @@ public class BigModuleServiceImpl implements BigModuleService {
         ChatCompletionRequest streamChatCompletionRequest = ChatCompletionRequest.builder()
                 .model("ep-20250204104402-xlcg2")
                 .messages(streamMessages)
+                .streamOptions(chatCompletionRequestStreamOptions)
                 .build();
 
         service.streamChatCompletion(streamChatCompletionRequest)
@@ -181,6 +214,14 @@ public class BigModuleServiceImpl implements BigModuleService {
                                 // 发送消息到 WebSocket
                                 webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
                             }
+                            if (choice.getUsage() != null) {
+                                long promptTokens = choice.getUsage().getPromptTokens();
+                                long completionTokens = choice.getUsage().getCompletionTokens();
+                                long totalTokens = choice.getUsage().getTotalTokens();
+                                bigModuleResult.setPromptTokens(promptTokens);
+                                bigModuleResult.setCompletionTokens(completionTokens);
+                                bigModuleResult.setTotalTokens(totalTokens);
+                            }
                         }
                 );
         Message message = new Message();
@@ -188,14 +229,20 @@ public class BigModuleServiceImpl implements BigModuleService {
         message.setContent("$$$");
         String messageJson = JSON.toJSONString(message);
         webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
+        bigModuleResult.setUserId(SecurityUtils.getLoginUser().getUserid().toString());
+        return bigModuleResult;
     }
 
     @Override
-    public void sport() throws IOException {
+    @BigModuleLog("运动建议")
+    @UserBigModule
+    public BigModuleResult sport() throws IOException {
+        BigModuleResult bigModuleResult = new BigModuleResult();
         final List<ChatMessage> streamMessages = new ArrayList<>();
         final ChatMessage streamSystemMessage = ChatMessage.builder().role(ChatMessageRole.SYSTEM).content("你是健康分析师，根据我的健康数据和运动情况进行运动建议").build();
         Health health = healthService.get(String.valueOf(SecurityUtils.getUserId()), SecurityConstants.INNER).getData();
         Sport sport = sportService.get(String.valueOf(SecurityUtils.getUserId()),SecurityConstants.INNER).getData();
+        ChatCompletionRequest.ChatCompletionRequestStreamOptions  chatCompletionRequestStreamOptions= new ChatCompletionRequest.ChatCompletionRequestStreamOptions(true);
         StringBuilder text = new StringBuilder();
         if(health.getSex()=='1'){
             text.append("我是男性"+ health.getAge() +"岁");
@@ -216,6 +263,7 @@ public class BigModuleServiceImpl implements BigModuleService {
         ChatCompletionRequest streamChatCompletionRequest = ChatCompletionRequest.builder()
                 .model("ep-20250204104402-xlcg2")
                 .messages(streamMessages)
+                .streamOptions(chatCompletionRequestStreamOptions)
                 .build();
 
         service.streamChatCompletion(streamChatCompletionRequest)
@@ -231,6 +279,14 @@ public class BigModuleServiceImpl implements BigModuleService {
                                 // 发送消息到 WebSocket
                                 webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
                             }
+                            if (choice.getUsage() != null) {
+                                long promptTokens = choice.getUsage().getPromptTokens();
+                                long completionTokens = choice.getUsage().getCompletionTokens();
+                                long totalTokens = choice.getUsage().getTotalTokens();
+                                bigModuleResult.setPromptTokens(promptTokens);
+                                bigModuleResult.setCompletionTokens(completionTokens);
+                                bigModuleResult.setTotalTokens(totalTokens);
+                            }
                         }
                 );
         Message message = new Message();
@@ -238,5 +294,8 @@ public class BigModuleServiceImpl implements BigModuleService {
         message.setContent("$$$");
         String messageJson = JSON.toJSONString(message);
         webSocketService.sendMessage(SecurityUtils.getLoginUser().getUserid(),messageJson);
+        bigModuleResult.setUserId(SecurityUtils.getLoginUser().getUserid().toString());
+        return bigModuleResult;
     }
+
 }

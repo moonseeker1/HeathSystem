@@ -1,17 +1,12 @@
-package com.healthsystem.bigmoduleapi.webSocket;
+package com.healthsystem.bigmoduleApi.webSocket;
 
 
-import com.healthSystem.common.core.constant.SecurityConstants;
 import com.healthSystem.common.core.constant.TokenConstants;
-import com.healthSystem.common.core.context.SecurityContextHolder;
-import com.healthSystem.common.core.util.ServletUtils;
 import com.healthSystem.common.core.util.StringUtils;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import com.healthSystem.common.core.util.JwtUtils;

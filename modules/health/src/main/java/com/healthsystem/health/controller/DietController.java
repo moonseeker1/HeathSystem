@@ -34,4 +34,9 @@ public class DietController {
     public CommonResult<List<Diet>> listDiet(@RequestBody List<String> userIds) {
         return CommonResult.success(dietService.listDiet(userIds));
     }
+    @DeleteMapping("/delete/{dietId}")
+    public CommonResult delete(@PathVariable("dietId") String dietId) {
+        dietService.delete(dietId);
+        return CommonResult.success();
+    }
 }

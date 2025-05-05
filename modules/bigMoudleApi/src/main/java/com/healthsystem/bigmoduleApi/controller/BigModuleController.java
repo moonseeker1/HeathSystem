@@ -1,29 +1,23 @@
-package com.healthsystem.bigmoduleapi.controller;
+package com.healthsystem.bigmoduleApi.controller;
 
 
-import com.alibaba.fastjson2.JSON;
+import com.healthSystem.api.domain.SystemUserPage;
+import com.healthSystem.common.core.api.CommonPage;
 import com.healthSystem.common.core.api.CommonResult;
-import com.healthSystem.common.security.utils.SecurityUtils;
-import com.healthsystem.bigmoduleapi.domain.dto.Message;
-import com.healthsystem.bigmoduleapi.domain.entity.RequestText;
-import com.healthsystem.bigmoduleapi.service.impl.BigModuleServiceImpl;
-import com.healthsystem.bigmoduleapi.webSocket.WebSocketService;
-import com.healthsystem.bigmoduleapi.webSocket.WebSocketServiceImpl;
-import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionChunk;
-import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionRequest;
-import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;
-import com.volcengine.ark.runtime.model.completion.chat.ChatMessageRole;
+import com.healthsystem.bigmoduleApi.domain.entity.BigModuleLog;
+import com.healthsystem.bigmoduleApi.domain.entity.RequestText;
+import com.healthsystem.bigmoduleApi.domain.entity.UserBigModule;
+import com.healthsystem.bigmoduleApi.service.BigModuleLogService;
+import com.healthsystem.bigmoduleApi.service.BigModuleUserService;
+import com.healthsystem.bigmoduleApi.service.impl.BigModuleServiceImpl;
+import com.healthsystem.bigmoduleApi.webSocket.WebSocketService;
 import com.volcengine.ark.runtime.service.ArkService;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/bigModule")
@@ -36,6 +30,10 @@ public class BigModuleController {
     private BigModuleServiceImpl bigModuleService;
     @Autowired
     private WebSocketService webSocketService;
+    @Autowired
+    private BigModuleLogService bigModuleLogService;
+    @Autowired
+    private BigModuleUserService bigModuleUserService;
 
     @GetMapping(value = "/chat")
     public CommonResult chat(RequestText text) throws IOException {
@@ -61,6 +59,24 @@ public class BigModuleController {
     @GetMapping(value = "/sport")
     public CommonResult<String> sport() throws IOException {
         bigModuleService.sport();
+        return CommonResult.success();
+    }
+    @GetMapping(value = "/list/logs")
+    public CommonResult<CommonPage<BigModuleLog>> listLogs(SystemUserPage systemUserPage) {
+        return CommonResult.success(CommonPage.restPage(bigModuleLogService.list(systemUserPage)));
+    }
+    @GetMapping(value = "/list/userModule")
+    public CommonResult<CommonPage<UserBigModule>> listUserModule(SystemUserPage systemUserPage) {
+        return CommonResult.success(CommonPage.restPage(bigModuleUserService.list(systemUserPage)));
+    }
+    @DeleteMapping(value = "/delete/userModule/{userModuleId}")
+    public CommonResult deleteUserModule(@PathVariable("userModuleId") String userModuleId) {
+        bigModuleUserService.delete(userModuleId);
+        return CommonResult.success();
+    }
+    @DeleteMapping(value = "/delete/log/{logId}")
+    public CommonResult deleteLog(@PathVariable("logId") String logId) {
+        bigModuleLogService.delete(logId);
         return CommonResult.success();
     }
 }

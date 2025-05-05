@@ -12,4 +12,6 @@ public interface HealthService {
     public Health get(String userId);
 
     List<Health> listHealth(List<String> userIds);
+
+    void delete(String healthId);
 }
